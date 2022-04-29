@@ -50,21 +50,64 @@ class _ScanState extends State<Scan> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-        home: Scaffold(
-            appBar: AppBar(title: const Text('Barcode scan')),
-            body: Builder(builder: (BuildContext context) {
-              return Container(
-                  alignment: Alignment.center,
-                  child: Flex(
-                      direction: Axis.vertical,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        ElevatedButton(
-                            onPressed: () {
-                              scanQR();
-                            },
-                            child: const Text('QR scan')),
-                      ]));
-            })));
+      home: Scaffold(
+        body: Builder(
+          builder: (BuildContext context) {
+            return Container(
+              alignment: Alignment.center,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Container(
+                    width: MediaQuery.of(context).size.width / 1.1,
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(5),
+                        color: Colors.grey[200]),
+                    child: Padding(
+                      padding: const EdgeInsets.all(18.0),
+                      child: Column(
+                        children: const [
+                          Text(
+                            'Scan QR Code',
+                            style: TextStyle(
+                                fontSize: 18, fontWeight: FontWeight.bold),
+                          ),
+                          SizedBox(height: 6),
+                          Text('Scan for check inventory of',
+                              style: TextStyle(
+                                  fontSize: 13, color: Colors.black54)),
+                          SizedBox(height: 6),
+                          Text("information technology school's assets",
+                              style: TextStyle(
+                                  fontSize: 13, color: Colors.black54))
+                        ],
+                      ),
+                    ),
+                  ),
+                  SizedBox(height: MediaQuery.of(context).size.height * 0.08),
+                  Icon(
+                    Icons.qr_code_2_outlined,
+                    size: MediaQuery.of(context).size.height * 0.35,
+                  ),
+                  SizedBox(height: MediaQuery.of(context).size.height * 0.06),
+                  Container(
+                    width: MediaQuery.of(context).size.width / 1.1,
+                    height: 50,
+                    child: ElevatedButton(
+                      style:
+                          ElevatedButton.styleFrom(primary: Color(0XFF0000D1)),
+                      onPressed: () {
+                        scanQR();
+                      },
+                      child: const Text('Scan QR'),
+                    ),
+                  ),
+                ],
+              ),
+            );
+          },
+        ),
+      ),
+    );
   }
 }
