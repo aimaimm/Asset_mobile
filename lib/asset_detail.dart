@@ -12,14 +12,15 @@ class Asset_detail extends StatefulWidget {
 class _Asset_detailState extends State<Asset_detail> {
   TextEditingController Text_building = TextEditingController();
   TextEditingController Text_room = TextEditingController();
-  bool _value = false;
-  var url = 'http://192.168.100.12:3000/getitem';
-  var url_update = 'http://192.168.100.12:3000/updateitem';
+  var url = 'http://10.0.2.2:3000/getitem';
+  var url_update = 'http://10.0.2.2:3000/updateitem';
   String numinven = '';
   String nameinven = '';
   String invenlocation = '';
   String invenroom = '';
+  int status = 0;
   int _radioValue = 0;
+  bool evaluate = false;
 
   Future<void> datadb() async {
     final prefs = await SharedPreferences.getInstance();
@@ -29,7 +30,7 @@ class _Asset_detailState extends State<Asset_detail> {
     Response response =
         await GetConnect().post(url, {'inventorynumber': invennumber});
     if (!response.status.isOk) {
-      return Get.defaultDialog(title: 'Error', middleText: response.body);
+      return Get.defaultDialog(title: 'Error', middleText: 'DB Error');
     }
 
     List data = response.body;
@@ -43,6 +44,14 @@ class _Asset_detailState extends State<Asset_detail> {
       nameinven = data[0]['Asset_Description'];
       invenlocation = data[0]['Location'];
       invenroom = data[0]['Room'];
+      status = data[0]['Status'];
+
+      // Set Radio
+      if (status == 1) {
+        _radioValue = 1;
+      } else {
+        _radioValue = 0;
+      }
 
       // Fill data in textfield
       Text_building.text = invenlocation;
@@ -50,6 +59,7 @@ class _Asset_detailState extends State<Asset_detail> {
     });
   }
 
+//Radio button
   void _handleRadioValueChange(int? value) {
     setState(() {
       _radioValue = value!;
@@ -69,7 +79,6 @@ class _Asset_detailState extends State<Asset_detail> {
   void initState() {
     // TODO: implement initState
     datadb();
-
     super.initState();
   }
 
@@ -84,14 +93,16 @@ class _Asset_detailState extends State<Asset_detail> {
         height: MediaQuery.of(context).size.height,
         child: Column(
           children: [
+            Text('Inventory number'),
             Text(numinven),
             Text(nameinven),
-            SizedBox(
+            const SizedBox(
               height: 13,
             ),
             SizedBox(
               height: 62,
               child: TextField(
+                enabled: status == 0 ? true : false,
                 style: TextStyle(fontSize: 15),
                 controller: Text_building,
                 // autofocus: true,
@@ -100,13 +111,14 @@ class _Asset_detailState extends State<Asset_detail> {
                 maxLines: 99,
               ),
             ),
-            SizedBox(
+            const SizedBox(
               height: 13,
             ),
             SizedBox(
               height: 62,
               child: TextField(
-                style: TextStyle(fontSize: 15),
+                enabled: status == 0 ? true : false,
+                style: const TextStyle(fontSize: 15),
                 controller: Text_room,
                 // autofocus: true,
                 decoration: const InputDecoration(
@@ -120,7 +132,7 @@ class _Asset_detailState extends State<Asset_detail> {
                   Radio(
                       value: 0,
                       groupValue: _radioValue,
-                      onChanged: _handleRadioValueChange),
+                      onChanged: status == 1 ? null : _handleRadioValueChange),
                   Text('Lost')
                 ],
               ),
@@ -129,7 +141,7 @@ class _Asset_detailState extends State<Asset_detail> {
                   Radio(
                       value: 1,
                       groupValue: _radioValue,
-                      onChanged: _handleRadioValueChange),
+                      onChanged: status == 1 ? null : _handleRadioValueChange),
                   Text('Normal')
                 ],
               ),
@@ -138,15 +150,14 @@ class _Asset_detailState extends State<Asset_detail> {
                   Radio(
                       value: 2,
                       groupValue: _radioValue,
-                      onChanged: _handleRadioValueChange),
+                      onChanged: status == 1 ? null : _handleRadioValueChange),
                   Text('Degraded')
                 ],
               ),
             ]),
-            ElevatedButton(
-              onPressed: updateinven,
-              child: Text('Check'),
-            ),
+            status == 0
+                ? ElevatedButton(onPressed: updateinven, child: Text('Check'))
+                : Text('The Access is Checked'),
           ],
         ),
       ),
@@ -156,7 +167,7 @@ class _Asset_detailState extends State<Asset_detail> {
   Future<void> updateinven() async {
     final prefs = await SharedPreferences.getInstance();
     final String? invennumber = prefs.getString('Invennumber');
-    
+
     final building = Text_building.text;
     final room = Text_room.text;
 
