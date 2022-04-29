@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_application_1/asset_detail.dart';
+import 'package:flutter_application_1/views/asset_detail.dart';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -90,12 +90,12 @@ class _ScanState extends State<Scan> {
                     size: MediaQuery.of(context).size.height * 0.35,
                   ),
                   SizedBox(height: MediaQuery.of(context).size.height * 0.06),
-                  Container(
+                  SizedBox(
                     width: MediaQuery.of(context).size.width / 1.1,
                     height: 50,
                     child: ElevatedButton(
                       style:
-                          ElevatedButton.styleFrom(primary: Color(0XFF0000D1)),
+                          ElevatedButton.styleFrom(primary:const Color(0XFF0000D1)),
                       onPressed: () {
                         scanQR();
                       },

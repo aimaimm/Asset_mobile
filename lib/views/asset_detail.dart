@@ -26,7 +26,7 @@ class _Asset_detailState extends State<Asset_detail> {
     final prefs = await SharedPreferences.getInstance();
     final String? invennumber = prefs.getString('Invennumber');
 
-    print(invennumber);
+    // print(invennumber);
     Response response =
         await GetConnect().post(url, {'inventorynumber': invennumber});
     if (!response.status.isOk) {
@@ -77,7 +77,7 @@ class _Asset_detailState extends State<Asset_detail> {
 
   @override
   void initState() {
-    // TODO: implement initState
+   
     datadb();
     super.initState();
   }
@@ -86,16 +86,16 @@ class _Asset_detailState extends State<Asset_detail> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Color(0XFF0000D1),
+        backgroundColor:const Color(0XFF0000D1),
         title: const Text('Asset detail'),
       ),
       body: Container(
-        margin: EdgeInsets.only(top: 15),
-        padding: EdgeInsets.all(10),
+        margin:const EdgeInsets.only(top: 15),
+        padding:const EdgeInsets.all(10),
         height: MediaQuery.of(context).size.height,
         child: Column(
           children: [
-            Text(
+           const Text(
               'Inventory number:',
               style: TextStyle(color: Colors.black45),
             ),
@@ -104,7 +104,7 @@ class _Asset_detailState extends State<Asset_detail> {
             ),
             Text(
               numinven,
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              style:const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
             const SizedBox(
               height: 6,
@@ -120,7 +120,7 @@ class _Asset_detailState extends State<Asset_detail> {
               height: 62,
               child: TextField(
                 enabled: status == 0 ? true : false,
-                style: TextStyle(fontSize: 15),
+                style:const TextStyle(fontSize: 15),
                 controller: Text_building,
                 // autofocus: true,
                 decoration: const InputDecoration(
@@ -153,7 +153,7 @@ class _Asset_detailState extends State<Asset_detail> {
                       value: 0,
                       groupValue: _radioValue,
                       onChanged: status == 1 ? null : _handleRadioValueChange),
-                  Text('Lost')
+                 const Text('Lost')
                 ],
               ),
               Row(
@@ -162,7 +162,7 @@ class _Asset_detailState extends State<Asset_detail> {
                       value: 1,
                       groupValue: _radioValue,
                       onChanged: status == 1 ? null : _handleRadioValueChange),
-                  Text('Normal')
+                 const Text('Normal')
                 ],
               ),
               Row(
@@ -171,7 +171,7 @@ class _Asset_detailState extends State<Asset_detail> {
                       value: 2,
                       groupValue: _radioValue,
                       onChanged: status == 1 ? null : _handleRadioValueChange),
-                  Text('Degraded')
+                 const Text('Degraded')
                 ],
               ),
             ]),
@@ -179,17 +179,17 @@ class _Asset_detailState extends State<Asset_detail> {
               height: 20,
             ),
             status == 0
-                ? Container(
+                ? SizedBox(
                     width: MediaQuery.of(context).size.width / 1.5,
                     height: 45,
                     child: ElevatedButton(
                       style:
-                          ElevatedButton.styleFrom(primary: Color(0XFF0000D1)),
+                          ElevatedButton.styleFrom(primary:const Color(0XFF0000D1)),
                       onPressed: updateinven,
-                      child: Text('Check'),
+                      child: const Text('Check'),
                     ),
                   )
-                : Text(
+                : const Text(
                     'The asset is checked',
                     style: TextStyle(fontSize: 20, color: Color(0XFF0000D1)),
                   ),
