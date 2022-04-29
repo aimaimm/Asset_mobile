@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_application_1/asset_detail.dart';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class Scan extends StatefulWidget {
   const Scan({Key? key}) : super(key: key);
@@ -15,11 +16,6 @@ class Scan extends StatefulWidget {
 class _ScanState extends State<Scan> {
   String _scanBarcode = 'Unknown';
 
-  @override
-  void initState() {
-    super.initState();
-  }
-
   Future<void> startBarcodeScanStream() async {
     FlutterBarcodeScanner.getBarcodeStreamReceiver(
             '#ff6666', 'Cancel', true, ScanMode.BARCODE)!
@@ -27,22 +23,28 @@ class _ScanState extends State<Scan> {
   }
 
   Future<void> scanQR() async {
+    final prefs = await SharedPreferences.getInstance();
     String barcodeScanRes;
     // Platform messages may fail, so we use a try/catch PlatformException.
     try {
       barcodeScanRes = await FlutterBarcodeScanner.scanBarcode(
           '#ff6666', 'Cancel', true, ScanMode.QR);
-
-      print(barcodeScanRes);
     } on PlatformException {
       barcodeScanRes = 'Failed to get platform version.';
     }
-
-    if (!mounted) return;
-
     setState(() {
       _scanBarcode = barcodeScanRes;
     });
+
+    if (!mounted) return;
+    await prefs.setString('Invennumber', _scanBarcode);
+
+    if (barcodeScanRes != null || barcodeScanRes != '') {
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => const Asset_detail()),
+      );
+    }
   }
 
   @override
@@ -60,14 +62,8 @@ class _ScanState extends State<Scan> {
                         ElevatedButton(
                             onPressed: () {
                               scanQR();
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => const Asset_detail()),
-                              );
                             },
                             child: const Text('QR scan')),
-                        
                       ]));
             })));
   }

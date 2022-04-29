@@ -5,7 +5,7 @@ import 'package:get/get.dart';
 
 void main() {
   runApp(const GetMaterialApp(
-    home: Asset_detail(),
+    home: Scan(),
   ));
 }
 

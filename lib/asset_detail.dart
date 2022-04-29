@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class Asset_detail extends StatefulWidget {
   const Asset_detail({Key? key}) : super(key: key);
@@ -9,12 +10,11 @@ class Asset_detail extends StatefulWidget {
 }
 
 class _Asset_detailState extends State<Asset_detail> {
-  var inventory_number = 580500100260002;
   TextEditingController Text_building = TextEditingController();
   TextEditingController Text_room = TextEditingController();
   bool _value = false;
-  var url = 'http://10.0.2.2:3000/getitem';
-  var url_update = 'http://10.0.2.2:3000/updateitem';
+  var url = 'http://192.168.100.12:3000/getitem';
+  var url_update = 'http://192.168.100.12:3000/updateitem';
   String numinven = '';
   String nameinven = '';
   String invenlocation = '';
@@ -22,8 +22,12 @@ class _Asset_detailState extends State<Asset_detail> {
   int _radioValue = 0;
 
   Future<void> datadb() async {
+    final prefs = await SharedPreferences.getInstance();
+    final String? invennumber = prefs.getString('Invennumber');
+
+    print(invennumber);
     Response response =
-        await GetConnect().post(url, {'inventorynumber': inventory_number});
+        await GetConnect().post(url, {'inventorynumber': invennumber});
     if (!response.status.isOk) {
       return Get.defaultDialog(title: 'Error', middleText: response.body);
     }
@@ -140,7 +144,7 @@ class _Asset_detailState extends State<Asset_detail> {
               ),
             ]),
             ElevatedButton(
-              onPressed: updateinven ,
+              onPressed: updateinven,
               child: Text('Check'),
             ),
           ],
@@ -150,22 +154,21 @@ class _Asset_detailState extends State<Asset_detail> {
   }
 
   Future<void> updateinven() async {
+    final prefs = await SharedPreferences.getInstance();
+    final String? invennumber = prefs.getString('Invennumber');
+    
     final building = Text_building.text;
     final room = Text_room.text;
 
     if (_radioValue != 1) {
       print('Please Select Normal');
     } else {
-      Response response = await GetConnect().post(url_update, {
-        'location': building,
-        'room': room,
-        'inventorynum': inventory_number
-      });
+      Response response = await GetConnect().post(url_update,
+          {'location': building, 'room': room, 'inventorynum': invennumber});
       // If Error
       if (!response.isOk) {
         return Get.defaultDialog(title: 'Error', middleText: response.body);
-      }
-      else{
+      } else {
         return Get.defaultDialog(title: 'Success', middleText: response.body);
       }
     }
