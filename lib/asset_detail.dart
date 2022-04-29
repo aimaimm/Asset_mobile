@@ -86,18 +86,35 @@ class _Asset_detailState extends State<Asset_detail> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Color(0XFF0000D1),
         title: const Text('Asset detail'),
       ),
       body: Container(
+        margin: EdgeInsets.only(top: 15),
         padding: EdgeInsets.all(10),
         height: MediaQuery.of(context).size.height,
         child: Column(
           children: [
-            Text('Inventory number'),
-            Text(numinven),
+            Text(
+              'Inventory number:',
+              style: TextStyle(color: Colors.black45),
+            ),
+            const SizedBox(
+              height: 10,
+            ),
+            Text(
+              numinven,
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            ),
+            const SizedBox(
+              height: 6,
+            ),
             Text(nameinven),
             const SizedBox(
               height: 13,
+            ),
+            const SizedBox(
+              height: 15,
             ),
             SizedBox(
               height: 62,
@@ -125,6 +142,9 @@ class _Asset_detailState extends State<Asset_detail> {
                     border: OutlineInputBorder(), labelText: 'Room'),
                 maxLines: 99,
               ),
+            ),
+            const SizedBox(
+              height: 20,
             ),
             Row(mainAxisAlignment: MainAxisAlignment.spaceAround, children: [
               Row(
@@ -155,9 +175,24 @@ class _Asset_detailState extends State<Asset_detail> {
                 ],
               ),
             ]),
+            const SizedBox(
+              height: 20,
+            ),
             status == 0
-                ? ElevatedButton(onPressed: updateinven, child: Text('Check'))
-                : Text('The Access is Checked'),
+                ? Container(
+                    width: MediaQuery.of(context).size.width / 1.5,
+                    height: 45,
+                    child: ElevatedButton(
+                      style:
+                          ElevatedButton.styleFrom(primary: Color(0XFF0000D1)),
+                      onPressed: updateinven,
+                      child: Text('Check'),
+                    ),
+                  )
+                : Text(
+                    'The asset is checked',
+                    style: TextStyle(fontSize: 20, color: Color(0XFF0000D1)),
+                  ),
           ],
         ),
       ),
