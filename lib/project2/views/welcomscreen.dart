@@ -20,8 +20,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
   int degraded = 0;
   final _formKey = GlobalKey<FormState>();
 
-  var url_status = 'http://192.168.100.12:3000/status';
-
+  var url_status = 'http://10.0.2.2:3000/status';
   Future<void> getstatus() async {
     Response response = await GetConnect().get(url_status);
     if (!response.isOk) {
@@ -30,6 +29,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
     }
 
     List data = response.body;
+    print(data);
     setState(() {
       lost = data[0]['Item_Status'];
       normal = data[1]['Item_Status'];
@@ -47,7 +47,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
 
     await prefs.setString('Inveninput', invennum);
 
-    if (invennum != '' && invennum != null) {
+    if (invennum.length == 15) {
       Get.to(Asset_detail());
     }
   }
@@ -71,7 +71,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
     setState(() {
       _scanBarcode = barcodeScanRes;
     });
-    print(_scanBarcode);
+    // print(_scanBarcode);
     if (!mounted) return;
     await prefs.setString('Invennumber', _scanBarcode);
 
@@ -94,26 +94,30 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
           title: const Text('ITschool Asset Checking'),
         ),
         body: Container(
+          padding: EdgeInsets.all(15),
           child: Column(
             children: [
               Text('Summary of asset checking status'),
+              SizedBox(height: 8),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text('Lost: ${lost}',
-                      style: TextStyle(
+                      style: const TextStyle(
                         fontSize: 18,
                         color: Colors.red,
                       )),
                   SizedBox(width: 5),
                   Text('Normal: ${normal}',
-                      style: TextStyle(fontSize: 15, color: Colors.green)),
-                  SizedBox(width: 5),
+                      style:
+                          const TextStyle(fontSize: 15, color: Colors.green)),
+                  const SizedBox(width: 5),
                   Text('Degraded: ${degraded}',
-                      style: TextStyle(fontSize: 15, color: Colors.grey)),
+                      style: const TextStyle(fontSize: 15, color: Colors.grey)),
                 ],
               ),
-              Divider(
+              const SizedBox(height: 10),
+              const Divider(
                 thickness: 2,
                 height: 20,
                 indent: 20,
@@ -121,7 +125,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
               ),
               Text('Choose asset checking method'),
               Text('1. Input 15-digit inventory number'),
-              SizedBox(height: 10),
+              SizedBox(height: 13),
               Container(
                 child: Form(
                     key: _formKey,
@@ -130,8 +134,9 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                       children: [
                         TextFormField(
                           controller: invencontroller,
-                          decoration:
-                              InputDecoration(labelText: 'Inventory Number'),
+                          decoration: const InputDecoration(
+                              border: OutlineInputBorder(),
+                              labelText: 'Inventory Number'),
                           validator: (value) {
                             if (value!.isEmpty) {
                               return "Please enter Inventory number";
@@ -144,28 +149,29 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                       ],
                     )),
               ),
-              SizedBox(height: 10),
+              const SizedBox(height: 10),
               Container(
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     ElevatedButton(
+                      style: ElevatedButton.styleFrom(primary: Colors.red[200]),
                       onPressed: clearinput,
                       child: Row(
-                        children: [
+                        children: const [
                           Icon(Icons.cancel_rounded),
                           Text('Clear'),
                         ],
                       ),
                     ),
-                    SizedBox(width: 10),
+                    const SizedBox(width: 10),
                     ElevatedButton(
                       onPressed: () {
                         bool validate = _formKey.currentState!.validate();
                         inputinven();
                       },
                       child: Row(
-                        children: [
+                        children: const [
                           Icon(Icons.check_box_outlined),
                           Text('Check'),
                         ],
@@ -174,10 +180,12 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                   ],
                 ),
               ),
-              Divider(thickness: 2, height: 20, indent: 20, endIndent: 10),
-              Text('OR'),
-              Text('2.Scan QR code of asset'),
-              SizedBox(height: 10),
+              const SizedBox(height: 10),
+              const Divider(
+                  thickness: 2, height: 20, indent: 20, endIndent: 10),
+              const Text('OR'),
+              const Text('2.Scan QR code of asset'),
+              const SizedBox(height: 10),
               SizedBox(
                 width: MediaQuery.of(context).size.width / 1.1,
                 height: 50,
@@ -189,7 +197,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                   },
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
-                    children: [
+                    children: const [
                       Text('Scan QR'),
                       SizedBox(
                         width: 5,

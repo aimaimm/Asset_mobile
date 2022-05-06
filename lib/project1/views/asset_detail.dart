@@ -13,8 +13,8 @@ class Asset_detail extends StatefulWidget {
 class _Asset_detailState extends State<Asset_detail> {
   TextEditingController Text_building = TextEditingController();
   TextEditingController Text_room = TextEditingController();
-  var url = 'http://192.168.100.12:3000/getitem';
-  var url_update = 'http://192.168.100.12:3000/updateitem';
+  var url = 'http://10.0.2.2:3000/getitem';
+  var url_update = 'http://10.0.2.2:3000/updateitem';
   String numinven = '';
   String nameinven = '';
   String invenlocation = '';
@@ -29,7 +29,7 @@ class _Asset_detailState extends State<Asset_detail> {
     final prefs = await SharedPreferences.getInstance();
     final String? invennumber = prefs.getString('Invennumber');
     final String? inveninput = prefs.getString('Inveninput');
-    // print(invennumber);
+    print(invennumber);
     Response response =
         await GetConnect().post(url, {'inventorynumber': invennumber , 'inventorynumber': inveninput});
     if (!response.status.isOk) {
